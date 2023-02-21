@@ -31,8 +31,26 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <a href="{{ route('post.create') }}" class="btn btn-md btn-success mb-3 float-right">New
-                            Post</a>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                              <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                            </li>
+                            <li class="nav-item d-none d-sm-inline-block">
+                              <h5 class="m-0">Login name : {{Auth::user()->name}}</h5>
+                              <br/>
+                              @can('isAdmin')
+                                  <span class="btn btn-success">Admin</span>
+                                      @elsecan('isOperator')
+                                          <span class="btn btn-info">Operator</span>
+                                      @else
+                                          <span class="btn btn-warning">User Client</span>
+                              @endcan
+                            </li>
+                          </ul>
+                        </nav>
+                                <a href="/logout" class="btn btn-md btn-danger mb-3 float-right">Log out</a>
+                                <a href="{{ route('post.create') }}" class="btn btn-md btn-success mb-3 float-right">New
+                                    Post</a>
 
                         <table class="table table-bordered mt-1">
                             <thead>
@@ -56,7 +74,9 @@
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')
+                                            @can('isAdmin')
                                             <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
+                                            @endcan
                                         </form>
                                     </td>
                                 </tr>

@@ -21,12 +21,17 @@ Route::get('/', function () {
 });
 
 
-Route::resource('post', PostController::class);
+Route::group(['middleware' => 'revalidate'], function()
+{
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+    Route::resource('post', PostController::class)->middleware('auth');
+});
+
 
 
 Route::get('login', [LoginController::class, 'login'])->name('login')->middleware('guest');
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
 
 Route::get('register', [LoginController::class, 'register']);
 Route::post('register', [LoginController::class, 'store']);
