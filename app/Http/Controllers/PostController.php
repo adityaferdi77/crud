@@ -3,15 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Post; 
+use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::latest()->get();
-        return view('posts.index', compact('posts'));
+        if((auth()->user()->role == "admin") || (auth()->user()->role == "operator"))
+        {
+            return view('posts.index', [
+                'title'     =>'Main Page',
+                'posts'     => Post::all()
+            ]);
+        }else{
+            return view ('posts.index',[
+                'title'     => 'Main Page',
+                'posts'     => Post::where('user_id', Auth()->user()->id)->get()
+            ]);
+        }
     }
 
     public function create()
@@ -31,7 +42,8 @@ class PostController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'status' => $request->status,
-            'slug' => Str::slug($request->title)
+            'slug' => Str::slug($request->title),
+            'user_id' => Auth()->user()->id
         ]);
 
         if ($post) {
