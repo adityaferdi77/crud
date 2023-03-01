@@ -35,15 +35,23 @@ class PostController extends Controller
         $this->validate($request, [
             'title' => 'required|string|max:155',
             'content' => 'required',
+            'foto'    => 'required',
             'status' => 'required'
         ]);
+        if ($foto = $request->file('foto')) {
+            $destinationPath = 'foto/';
+            $profileImage    = date('YmdHis') . "." . $foto->getClientOriginalExtension();
+            $foto->move($destinationPath, $profileImage);
+            $input['foto'] = "$profileImage";
+        }
 
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
             'status' => $request->status,
             'slug' => Str::slug($request->title),
-            'user_id' => Auth()->user()->id
+            'user_id' => Auth()->user()->id,
+            'foto' => $profileImage
         ]);
 
         if ($post) {

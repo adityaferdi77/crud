@@ -56,6 +56,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Title</th>
+                                    <th scope="col">Foto</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Create At</th>
                                     <th scope="col">Action</th>
@@ -65,6 +66,7 @@
                                 @forelse ($posts as $post)
                                 <tr>
                                     <td>{{ $post->title }}</td>
+                                    <td><img src="/foto/{{ $post->foto }}" width="200px" alt=""></td>
                                     <td>{{ $post->status == 0 ? 'Draft':'Publish' }}</td>
                                     <td>{{ $post->created_at->format('d-m-Y') }}</td>
                                     <td class="text-center">

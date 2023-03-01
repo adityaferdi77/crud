@@ -20,21 +20,21 @@
 
                 <!-- Notifikasi menggunakan flash session data -->
                 @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
                 @endif
 
                 @if (session('error'))
-                <div class="alert alert-error">
-                    {{ session('error') }}
-                </div>
+                    <div class="alert alert-error">
+                        {{ session('error') }}
+                    </div>
                 @endif
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
 
-                        <form action="{{ route('post.store') }}" method="POST">
+                        <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group">
@@ -44,10 +44,17 @@
 
                                 <!-- error message untuk title -->
                                 @error('title')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="foto">Kirim Foto</label>
+                                <img src="" alt="" class="img-preview img-fluid form-group col-sm-5">
+                                <input type="file" id="foto"
+                                    name="foto" onchange="previewImage()" accept="image/*">
                             </div>
 
                             <div class="form-group">
@@ -60,17 +67,14 @@
 
                             <div class="form-group">
                                 <label for="content">Content</label>
-                                <textarea
-                                    name="content" id="content"
-                                    class="form-control @error('content') is-invalid @enderror"
-                                    rows="5"
+                                <textarea name="content" id="content" class="form-control @error('content') is-invalid @enderror" rows="5"
                                     required>{{ old('content') }}</textarea>
 
                                 <!-- error message untuk content -->
                                 @error('content')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
 
@@ -102,3 +106,18 @@
 </body>
 
 </html>
+<script>
+    function previewImage() {
+        const image = document.querySelector('#foto')
+        const imgPreview = document.querySelector('.img-preview')
+        
+        imgPreview.style.display = 'block'
+
+        const oFReader = new FileReader()
+        oFReader.readAsDataURL(image.files[0])
+
+        oFReader.onload = function (oFREvent) {
+            imgPreview.src = oFREvent.target.result
+        }
+    }
+</script>
